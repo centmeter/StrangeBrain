@@ -2,8 +2,14 @@
 using System.Collections;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 public class UILevel001 : UIBase
 {
+    /// <summary>
+    /// 欢迎文本
+    /// </summary>
+    private Text _welcomeText;
+    private const string WELCOME_TEXT = "txtWelcome";
     /// <summary>
     /// 确定输入框内容按钮
     /// </summary>
@@ -32,11 +38,22 @@ public class UILevel001 : UIBase
     /// <summary>
     /// 提示区渐隐时间
     /// </summary>
-    private const float TEXT_FADEOUT_TIME = 3f;
+    private float _textFadeoutTime = 3f;
+    /// <summary>
+    /// 欢迎语
+    /// </summary>
+    private string _welcomeStr = "欢迎来到 StrangeBrain";
+    /// <summary>
+    /// 输入框提示语
+    /// </summary>
+    private string _placeHolder = "请输入 你的名字";
     public override void RegisterNode(string name, GameObject obj)
     {
         switch (name)
         {
+            case WELCOME_TEXT:
+                _welcomeText = obj.GetComponent<Text>();
+                break;
             case TOUCH_BUTTON:
                 _touchButton = obj.GetComponent<Button>();
                 break;
@@ -59,6 +76,15 @@ public class UILevel001 : UIBase
         base.Init();
         _nextButton.gameObject.SetActive(false);
         _touchButton.gameObject.SetActive(false);
+        SetInputInteractable(false);
+        TweenCallback callback = () =>
+          {
+              TypeWriter(_nameInput.placeholder.GetComponent<Text>(), _placeHolder, 2.5f, () =>
+                 {
+                     SetInputInteractable(true);
+                 }, ScrambleMode.None);
+          };
+        TypeWriter(_welcomeText, _welcomeStr, 6.5f, callback,ScrambleMode.Numerals);
     }
     public override void OnButtonClick(string name)
     {
@@ -66,8 +92,7 @@ public class UILevel001 : UIBase
         {
             case CONFIRM_BUTTON:
                 string input = _nameInput.text;
-                _nameInput.interactable = false;
-                _confirmButton.interactable = false;
+                SetInputInteractable(false);
                 if (JudgeInput(input))
                     OnInputRight();
                 else
@@ -78,12 +103,17 @@ public class UILevel001 : UIBase
                 UIManager.Instance.UIExit(this);
                 break;
             case TOUCH_BUTTON:
-                _nextButton.gameObject.SetActive(true);
                 _touchButton.gameObject.SetActive(false);
+                ShowNextButtonByMove();
                 break;
             default:
                 break;
         }
+    }
+    private void TypeWriter(Text text,string content,float duration,TweenCallback callback,ScrambleMode mode)
+    {
+        Tweener tweener = text.DOText(content, duration,true, mode);
+        tweener.OnComplete(callback);
     }
     /// <summary>
     /// 判定输入是否正确
@@ -101,14 +131,13 @@ public class UILevel001 : UIBase
     {
         _promptText.text = "NONONO 我要 你的名字";
         Color tempColor = _promptText.color;
-        Tweener tweener = _promptText.DOFade(0, TEXT_FADEOUT_TIME);
+        Tweener tweener = _promptText.DOFade(0, _textFadeoutTime);
         tweener.OnComplete(() =>
         {
             _promptText.text = string.Empty;
             _promptText.color = tempColor;
             _nameInput.text = string.Empty;
-            _nameInput.interactable = true;
-            _confirmButton.interactable = true;
+            SetInputInteractable(true);
         });
     }
     /// <summary>
@@ -116,7 +145,31 @@ public class UILevel001 : UIBase
     /// </summary>
     private void OnInputRight()
     {
-        _promptText.text = "HOHOHO 第二关 近在嘴边";
+        _promptText.text = "HOHOHO 第二关 近在嘴边了";
         _touchButton.gameObject.SetActive(true);
+    }
+    /// <summary>
+    /// 设置输入模块是否可操控
+    /// </summary>
+    /// <param name="enabled"></param>
+    private void SetInputInteractable(bool interactable)
+    {
+        _nameInput.interactable = interactable;
+        _confirmButton.interactable = interactable;
+    }
+    /// <summary>
+    /// 移动式显示NEXT按钮
+    /// </summary>
+    private void ShowNextButtonByMove()
+    {
+        _nextButton.gameObject.SetActive(true);
+        RectTransform rect = _nextButton.GetComponent<RectTransform>();
+        float pathX = -2*rect.anchoredPosition.x;
+        float endX = -rect.anchoredPosition.x;
+        Tweener tweener = rect.DOAnchorPosX(pathX, 0.5f);
+        tweener.OnComplete(()=>
+        {
+            rect.DOAnchorPosX(endX, 0.2f);
+        });
     }
 }
