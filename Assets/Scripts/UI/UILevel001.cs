@@ -99,8 +99,9 @@ public class UILevel001 : UIBase
                     OnInputWrong();
                 break;
             case NEXT_BUTTON:
-                UIManager.Instance.UIEnter<UILevel002>(false);
-                UIManager.Instance.UIExit(this);
+                _nextButton.interactable = false;
+                UIManager.Instance.UIEnter<UILevel002>(false,UIEnterStyle.FromLeftToRight);
+                UIManager.Instance.UIExit(this,UIExitStyle.ToRight);
                 break;
             case TOUCH_BUTTON:
                 _touchButton.gameObject.SetActive(false);

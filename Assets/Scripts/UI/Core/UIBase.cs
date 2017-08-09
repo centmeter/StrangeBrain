@@ -4,10 +4,6 @@ using UnityEngine.UI;
 public abstract class UIBase : MonoBehaviour
 {
     /// <summary>
-    /// 初始化完成标识
-    /// </summary>
-    private bool _initDone = false;
-    /// <summary>
     /// 是否需要缓存(默认不需要)
     /// </summary>
     public bool IsCache { get; protected set; }
