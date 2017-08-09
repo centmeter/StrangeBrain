@@ -7,6 +7,15 @@ public class UIManager : Singleton<UIManager>
 {
     private List<UIBase> _uiList;
     private GameObject _canvas;
+    public GameObject Canvas
+    {
+        get
+        {
+            if (_canvas == null)
+                _canvas = GameObject.Find("Canvas");
+            return _canvas;
+        }
+    }
     private const string UI_PATH_ROOT = "UIPrefabs/";
     private UIManager()
     {
@@ -14,15 +23,13 @@ public class UIManager : Singleton<UIManager>
     }
     public T UIEnter<T>(bool isCache, UIEnterStyle style,float time=1) where T : UIBase
     {
-        if (_canvas == null)
-            _canvas = GameObject.Find("Canvas");
         GameObject obj = ResourceManager.Instance.CreateGameObject(UI_PATH_ROOT + typeof(T).ToString(), isCache);
         if (obj == null)
         {
-            Debug.LogError("加载UI界面失败！Type:" + typeof(T).ToString());
+            Debug.LogWarning("加载UI界面失败！Type:" + typeof(T).ToString());
             return null;
         }
-        obj.transform.SetParent(_canvas.transform);
+        obj.transform.SetParent(Canvas.transform);
         RectTransform rect = obj.GetComponent<RectTransform>();
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
@@ -39,16 +46,16 @@ public class UIManager : Singleton<UIManager>
     {
         if (ui == null)
         {
-            Debug.LogError("需要退出的UI不存在！");
+            Debug.LogWarning("需要退出的UI不存在！");
             return;
         }
         if (!_uiList.Contains(ui))
         {
-            Debug.LogError("需要退出的UI不在UI列表中！UI:" + ui.ToString());
+            Debug.LogWarning("需要退出的UI不在UI列表中！UI:" + ui.ToString());
             return;
         }
         _uiList.Remove(ui);
-        OnUIExitStyle(ui.GetComponent<RectTransform>(), style, time,()=> { DestroyImmediate(ui.gameObject); });
+        OnUIExitStyle(ui.GetComponent<RectTransform>(), style, time,()=> { Destroy(ui.gameObject); });
         
     }
     /// <summary>
@@ -111,7 +118,7 @@ public class UIManager : Singleton<UIManager>
                 endPos = new Vector2(startPos.x, endY_t);
                 break;
             case UIExitStyle.ToBottom:
-                float endY_b = startPos.x - rect.rect.width;
+                float endY_b = startPos.y - rect.rect.height;
                 endPos = new Vector2(startPos.x, endY_b);
                 break;
             default:

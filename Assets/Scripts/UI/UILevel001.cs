@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using DG.Tweening;
-using System;
 public class UILevel001 : UIBase
 {
     /// <summary>
@@ -40,10 +38,6 @@ public class UILevel001 : UIBase
     /// </summary>
     private float _textFadeoutTime = 3f;
     /// <summary>
-    /// 欢迎语
-    /// </summary>
-    private string _welcomeStr = "欢迎来到 StrangeBrain";
-    /// <summary>
     /// 输入框提示语
     /// </summary>
     private string _placeHolder = "请输入 你的名字";
@@ -63,9 +57,11 @@ public class UILevel001 : UIBase
             case CONFIRM_BUTTON:
                 _confirmButton = obj.GetComponent<Button>();
                 break;
-            case NAME_INPUT:_nameInput = obj.GetComponent<InputField>();
+            case NAME_INPUT:
+                _nameInput = obj.GetComponent<InputField>();
                 break;
-            case NEXT_BUTTON:_nextButton = obj.GetComponent<Button>();
+            case NEXT_BUTTON:
+                _nextButton = obj.GetComponent<Button>();
                 break;
             default:
                 break;
@@ -74,7 +70,7 @@ public class UILevel001 : UIBase
     public override void Init()
     {
         base.Init();
-        _nextButton.gameObject.SetActive(false);
+        InitNextButton();
         _touchButton.gameObject.SetActive(false);
         SetInputInteractable(false);
         TweenCallback callback = () =>
@@ -84,7 +80,9 @@ public class UILevel001 : UIBase
                      SetInputInteractable(true);
                  }, ScrambleMode.None);
           };
-        TypeWriter(_welcomeText, _welcomeStr, 6.5f, callback,ScrambleMode.Numerals);
+        string welcomeStr = _welcomeText.text;
+        _welcomeText.text = string.Empty;
+        TypeWriter(_welcomeText, welcomeStr, 6.5f, callback, ScrambleMode.Numerals);
     }
     public override void OnButtonClick(string name)
     {
@@ -100,8 +98,8 @@ public class UILevel001 : UIBase
                 break;
             case NEXT_BUTTON:
                 _nextButton.interactable = false;
-                UIManager.Instance.UIEnter<UILevel002>(false,UIEnterStyle.FromLeftToRight);
-                UIManager.Instance.UIExit(this,UIExitStyle.ToRight);
+                UIManager.Instance.UIEnter<UILevel002>(false, UIEnterStyle.FromLeftToRight);
+                UIManager.Instance.UIExit(this, UIExitStyle.ToRight);
                 break;
             case TOUCH_BUTTON:
                 _touchButton.gameObject.SetActive(false);
@@ -111,9 +109,9 @@ public class UILevel001 : UIBase
                 break;
         }
     }
-    private void TypeWriter(Text text,string content,float duration,TweenCallback callback,ScrambleMode mode)
+    private void TypeWriter(Text text, string content, float duration, TweenCallback callback, ScrambleMode mode)
     {
-        Tweener tweener = text.DOText(content, duration,true, mode);
+        Tweener tweener = text.DOText(content, duration, true, mode);
         tweener.OnComplete(callback);
     }
     /// <summary>
@@ -165,12 +163,23 @@ public class UILevel001 : UIBase
     {
         _nextButton.gameObject.SetActive(true);
         RectTransform rect = _nextButton.GetComponent<RectTransform>();
-        float pathX = -2*rect.anchoredPosition.x;
+        float pathX = -2 * rect.anchoredPosition.x;
         float endX = -rect.anchoredPosition.x;
         Tweener tweener = rect.DOAnchorPosX(pathX, 0.5f);
-        tweener.OnComplete(()=>
+        tweener.OnComplete(() =>
         {
-            rect.DOAnchorPosX(endX, 0.2f);
+            rect.DOAnchorPosX(endX, 0.2f).onComplete=()=> { _nextButton.enabled = true; };
         });
+    }
+    /// <summary>
+    /// 初始化下一关按钮
+    /// </summary>
+    private void InitNextButton()
+    {
+        _nextButton.gameObject.SetActive(false);
+        RectTransform rect = _nextButton.GetComponent<RectTransform>();
+        float x = -rect.anchoredPosition.x;
+        rect.anchoredPosition = new Vector2(x, rect.anchoredPosition.y);
+        _nextButton.enabled = false;
     }
 }

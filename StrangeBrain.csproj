@@ -64,24 +64,27 @@
     <Reference Include="DOTween">
       <HintPath>Assets\DOTween\DOTween.dll</HintPath>
     </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>Assets\DOTween\DOTween43.dll</HintPath>
+    </Reference>
     <Reference Include="DOTween46">
       <HintPath>Assets\DOTween\DOTween46.dll</HintPath>
     </Reference>
     <Reference Include="DOTween50">
       <HintPath>Assets\DOTween\DOTween50.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween43">
-      <HintPath>Assets\DOTween\DOTween43.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Core\ResourceManager.cs" />
     <Compile Include="Assets\Scripts\Core\Singleton.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
+    <Compile Include="Assets\Scripts\TestMain.cs" />
     <Compile Include="Assets\Scripts\UI\Core\UIBase.cs" />
     <Compile Include="Assets\Scripts\UI\Core\UIManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Drag\DragItem.cs" />
     <Compile Include="Assets\Scripts\UI\UILevel001.cs" />
     <Compile Include="Assets\Scripts\UI\UILevel002.cs" />
+    <Compile Include="Assets\Scripts\UI\UILevel003.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\DOTween\DOTween.XML" />
