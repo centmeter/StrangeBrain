@@ -145,7 +145,10 @@ public class UILevel001 : UIBase
     private void OnInputRight()
     {
         _promptText.text = "HOHOHO 第二关 近在嘴边了";
-        _touchButton.gameObject.SetActive(true);
+        Color color = _promptText.color;
+        _promptText.color = new Color(color.r, color.g, color.b, 0);
+        _promptText.DOFade(1, 2f).onComplete=()=> { _touchButton.gameObject.SetActive(true); };
+        
     }
     /// <summary>
     /// 设置输入模块是否可操控
