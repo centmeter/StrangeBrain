@@ -103,9 +103,9 @@ public class UILevel001 : UIBase
     /// </summary>
     private void InitPromptData()
     {
-        _placeHolderStr = "请输入 你的名字";
-        _wrongPromptStr = "NONONO 我要 你的名字";
-        _rightPromptStr = "HOHOHO 第二关 近在嘴边了";
+        _placeHolderStr = "请输入你的名字";
+        _wrongPromptStr = "NONONO 我要你的名字";
+        _rightPromptStr = "HOHOHO 第二关近在嘴边了";
         _promptFadeoutTime = 3;
     }
     /// <summary>
