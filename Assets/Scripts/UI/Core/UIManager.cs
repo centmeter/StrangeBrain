@@ -129,38 +129,7 @@ public class UIManager : Singleton<UIManager>
         if (onComplete != null)
             tweener.OnComplete(onComplete);
     }
-    #region 其他方法
-    /// <summary>
-    /// 添加可拖拽组件
-    /// </summary>
-    public DragItem AddDragItem(GameObject obj, UnityAction onBeginDrag = null, UnityAction onDrag = null, UnityAction onEndDrag = null)
-    {
-        DragItem dragItem = obj.AddComponent<DragItem>();
-        if (onBeginDrag != null)
-            dragItem.onBeginDrag.AddListener(onBeginDrag);
-        if (onDrag != null)
-            dragItem.onDrag.AddListener(onDrag);
-        if (onEndDrag != null)
-            dragItem.onEndDrag.AddListener(onEndDrag);
-        return dragItem;
-    }
-    /// <summary>
-    /// 设置图片透明度
-    /// </summary>
-    public void SetImageAlpha(Image image, float alpha)
-    {
-        Color color = image.color;
-        image.color = new Color(color.r, color.g, color.b, alpha);
-    }
-    /// <summary>
-    /// 设置文本透明度
-    /// </summary>
-    public void SetTextAlpha(Text text,float alpha)
-    {
-        Color color = text.color;
-        text.color = new Color(color.r, color.g, color.b, alpha);
-    }
-    #endregion
+    
 }
 public enum UIEnterStyle
 {

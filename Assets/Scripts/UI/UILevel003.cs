@@ -7,7 +7,4 @@ public class UILevel003 : UIBase
     public override void RegisterNode(string name, GameObject obj)
     {
     }
-    public override void OnButtonClick(string name)
-    {
-    }
 }

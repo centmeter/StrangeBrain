@@ -168,6 +168,20 @@ public class DragItem : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             return ItemOutRangeType.RightBottom;
         return ItemOutRangeType.NULL;
     }
+    /// <summary>
+    /// 添加可拖拽组件
+    /// </summary>
+    public static DragItem AddDragItem(GameObject obj, UnityAction onBeginDrag = null, UnityAction onDrag = null, UnityAction onEndDrag = null)
+    {
+        DragItem dragItem = obj.AddComponent<DragItem>();
+        if (onBeginDrag != null)
+            dragItem.onBeginDrag.AddListener(onBeginDrag);
+        if (onDrag != null)
+            dragItem.onDrag.AddListener(onDrag);
+        if (onEndDrag != null)
+            dragItem.onEndDrag.AddListener(onEndDrag);
+        return dragItem;
+    }
 }
 /// <summary>
 /// Item超出边界类型

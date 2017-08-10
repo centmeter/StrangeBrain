@@ -14,12 +14,6 @@ public abstract class UIBase : MonoBehaviour
     {
         if (tf != null)
             RegisterNode(tf.name,tf.gameObject);
-        Button btn = tf.GetComponent<Button>();
-        if (btn != null)
-            btn.onClick.AddListener(() =>
-            {
-                OnButtonClick(tf.name);
-            });
         for (int i = 0; i < tf.childCount; i++)
         {
             InitNode(tf.GetChild(i));
@@ -29,10 +23,6 @@ public abstract class UIBase : MonoBehaviour
     /// 注册节点
     /// </summary>
     public abstract void RegisterNode(string name, GameObject obj);
-    /// <summary>
-    /// 按钮点击事件
-    /// </summary>
-    public abstract void OnButtonClick(string name);
     /// <summary>
     /// 初始化
     /// </summary>
