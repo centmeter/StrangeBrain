@@ -33,6 +33,7 @@ public class UILevel002 : UIBase
     #region 与拖拽折线图相关变量
     private RectTransform _lineButtonRect;
     private RectTransform _contentTextRect;
+    private Image _lineButtonImage;
     /// <summary>
     /// 折线图在内容文本外面折线的颜色
     /// </summary>
@@ -74,7 +75,9 @@ public class UILevel002 : UIBase
         base.Init();
         _lineButtonRect = _lineButton.GetComponent<RectTransform>();
         _contentTextRect = _contentText.GetComponent<RectTransform>();
-        UIManager.Instance.AddDragItem(_lineButton.gameObject, null, OnLineButtonDrag, OnLineButtonDragEnd).enabled = false ;
+        _lineButtonImage = _lineButton.GetComponent<Image>();
+
+        UIManager.Instance.AddDragItem(_lineButton.gameObject, OnLinesDragBegin, OnLineButtonDrag, OnLineButtonDragEnd).enabled = false ;
         UIManager.Instance.AddDragItem(_titleText.gameObject, null, null, OnTitleTextDragEnd).enabled = false;
         InitNextButton();
         _lineButton.enabled = false;
@@ -92,14 +95,18 @@ public class UILevel002 : UIBase
                 UIManager.Instance.UIExit(this, UIExitStyle.ToBottom);
                 break;
             case LINE_BUTTON:
-                TweenCallback callback = () =>
-                  {
-                      _lineButton.GetComponent<DragItem>().enabled = true;
-                  };
                 _lineButton.enabled = false;
                 Image[] images = GetImageArr();
-                Image image = _lineButton.GetComponent<Image>();
-                image.DOFade(0.05f, 1.5f).onComplete = () => { AllLineDoFade(images, images.Length, 1, callback); };
+                //Image image = _lineButton.GetComponent<Image>();
+                //image.DOFade(0.05f, 1.5f).onComplete = () => { AllLineDoFade(images, images.Length, 1, callback); };
+                SetImagesColor(images, Color.yellow);
+                HideLines();
+                TweenCallback callback = () =>
+                {
+                    _lineButton.GetComponent<DragItem>().enabled = true;
+                    SetImagesColor(images, Color.black);
+                };
+                AllLineDoFade(images, images.Length, 1, callback);
                 break;
             default:
                 break;
@@ -119,9 +126,9 @@ public class UILevel002 : UIBase
         {
             txtArr[i] = _contentText.transform.GetChild(i).GetComponent<Text>();
             txtArr[i].text = strArr[i];
-            Color color = txtArr[i].color;
-            txtArr[i].color = new Color(color.r, color.g, color.b, 0);
+            UIManager.Instance.SetTextAlpha(txtArr[i], 0);
         }
+        
         yield return new WaitForSeconds(1.5f);
         TweenCallback callback = () =>
           {
@@ -151,6 +158,13 @@ public class UILevel002 : UIBase
 
     }
     /// <summary>
+    /// 折线图开始拖拽事件
+    /// </summary>
+    private void OnLinesDragBegin()
+    {
+        UIManager.Instance.SetImageAlpha(_lineButtonImage, 0.05f);
+    }
+    /// <summary>
     /// 隐藏折线
     /// </summary>
     private void HideLines()
@@ -158,8 +172,7 @@ public class UILevel002 : UIBase
         Image[] images = GetImageArr();
         for (int i = 0; i < images.Length; i++)
         {
-            Color color = images[i].color;
-            images[i].color = new Color(color.r, color.g, color.b, 0);
+            UIManager.Instance.SetImageAlpha(images[i], 0);
         }
     }
     /// <summary>
@@ -223,19 +236,13 @@ public class UILevel002 : UIBase
         {
             _isIn = true;
             Image[] imageArr = GetImageArr();
-            for (int i = 0; i < imageArr.Length; i++)
-            {
-                imageArr[i].color = _inColor;
-            }
+            SetImagesColor(imageArr, _inColor);
         }
         else if(!JudgeLineInContent()&&_isIn)
         {
             _isIn = false;
             Image[] imageArr = GetImageArr();
-            for (int i = 0; i < imageArr.Length; i++)
-            {
-                imageArr[i].color = _outColor;
-            }
+            SetImagesColor(imageArr, _outColor);
         }
     }
     /// <summary>
@@ -257,7 +264,8 @@ public class UILevel002 : UIBase
     /// </summary>
     private void OnLineButtonDragEnd()
     {
-        if(_isIn)
+        UIManager.Instance.SetImageAlpha(_lineButtonImage, 0);
+        if (_isIn)
         {
             _lineButton.GetComponent<DragItem>().enabled = false;
             _lineButtonRect.anchoredPosition = _contentTextRect.anchoredPosition;
@@ -290,5 +298,15 @@ public class UILevel002 : UIBase
         rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, y);
         _nextButton.gameObject.SetActive(false);
         _nextButton.enabled = false;
+    }
+    /// <summary>
+    /// 设置图片数组颜色
+    /// </summary>
+    private void SetImagesColor(Image[] images, Color color)
+    {
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].color = color;
+        }
     }
 }

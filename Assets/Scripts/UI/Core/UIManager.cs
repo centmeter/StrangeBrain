@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.Events;
+using UnityEngine.UI;
 public class UIManager : Singleton<UIManager>
 {
     private List<UIBase> _uiList;
@@ -142,6 +143,22 @@ public class UIManager : Singleton<UIManager>
         if (onEndDrag != null)
             dragItem.onEndDrag.AddListener(onEndDrag);
         return dragItem;
+    }
+    /// <summary>
+    /// 设置图片透明度
+    /// </summary>
+    public void SetImageAlpha(Image image, float alpha)
+    {
+        Color color = image.color;
+        image.color = new Color(color.r, color.g, color.b, alpha);
+    }
+    /// <summary>
+    /// 设置文本透明度
+    /// </summary>
+    public void SetTextAlpha(Text text,float alpha)
+    {
+        Color color = text.color;
+        text.color = new Color(color.r, color.g, color.b, alpha);
     }
     #endregion
 }

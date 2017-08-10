@@ -129,12 +129,11 @@ public class UILevel001 : UIBase
     private void OnInputWrong()
     {
         _promptText.text = "NONONO 我要 你的名字";
-        Color tempColor = _promptText.color;
         Tweener tweener = _promptText.DOFade(0, _textFadeoutTime);
         tweener.OnComplete(() =>
         {
             _promptText.text = string.Empty;
-            _promptText.color = tempColor;
+            UIManager.Instance.SetTextAlpha(_promptText, 1);
             _nameInput.text = string.Empty;
             SetInputInteractable(true);
         });
@@ -145,8 +144,7 @@ public class UILevel001 : UIBase
     private void OnInputRight()
     {
         _promptText.text = "HOHOHO 第二关 近在嘴边了";
-        Color color = _promptText.color;
-        _promptText.color = new Color(color.r, color.g, color.b, 0);
+        UIManager.Instance.SetTextAlpha(_promptText, 0);
         _promptText.DOFade(1, 2f).onComplete=()=> { _touchButton.gameObject.SetActive(true); };
         
     }
