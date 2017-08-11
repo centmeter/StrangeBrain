@@ -32,7 +32,7 @@ public class UILevel003 : UIBase
     private Button[] _nextButtonArr = new Button[4];
     private Text _promptText;
     private const string _promptTextStr = "txtPrompt";
-    private static string _keys = "2468642";
+    private static string _allKeys = "2468642";
     public override void RegisterNode(string name, GameObject obj)
     {
         switch (name)
@@ -207,20 +207,20 @@ public class UILevel003 : UIBase
     private void OnNextButtonClick(ButtonDirection dir)
     {
         _nextButtonArr[(int)dir].interactable = false;
-        UILevel003InitKey key = null;
-        if(_initKey.initKeyType==UILevel003InitKey.InitKeyType.BeforeMain)
+        UILevel003Key key = null;
+        if(_mainKey.keyType==UILevel003KeyType.BeforeMain)
         {
-            key = CreateLevel003InitKey(this._initKey, UILevel003InitKey.InitKeyType.Main);
+            key=GetKey(UILevel003KeyType.Main);
         }
-        else if(_initKey.initKeyType==UILevel003InitKey.InitKeyType.Main)
+        else if(_mainKey.keyType!=UILevel003KeyType.BeforeMain)
         {
-            UILevel003InitKey.ClickButtonType type = _initKey.needToClickButtonList[0];
-            if (JudgeButtonClick(dir, type))
+            ButtonDirection rightDir = _mainKey.needClickButtonList[0];
+            if (dir==rightDir)
             {
-                key = CreateLevel003InitKey(this._initKey, UILevel003InitKey.InitKeyType.Right);
+                key = GetKey(UILevel003KeyType.Right);
             }
             else
-                key = CreateLevel003InitKey(this._initKey, UILevel003InitKey.InitKeyType.Wrong);
+                key = GetKey(UILevel003KeyType.Wrong);
         }
         if (key == null)
             return;
@@ -241,34 +241,28 @@ public class UILevel003 : UIBase
     }
     #endregion
 
-    #region InitKey相关
+    #region Key相关
     private void InitDataFromKeys(UILevel003Key key)
     {
         TextTool.RefreshText(_promptText, key.promptStr);
     }
-    private static UILevel003Key CreateLevel003InitKey(UILevel003Key fromKey, UILevel003KeyType toType)
+    private UILevel003Key GetKey(UILevel003KeyType toType)
     {
         String keys = string.Empty;
         switch (toType)
         {
             case UILevel003KeyType.Main:
-                keys = _keys;
-                break;
-            case UILevel003InitKey.InitKeyType.Wrong:
-                keys = _keys;
-                break;
-            case UILevel003InitKey.InitKeyType.Right:
-                if (fromKey == null)
-                    return null;
-                List<UILevel003InitKey.ClickButtonType> list = fromKey.needToClickButtonList;
+                keys = _allKeys;
+                return new UILevel003Key(toType, keys);
+            case UILevel003KeyType.Wrong:
+                keys = _allKeys;
+                return new UILevel003Key(toType, keys);
+            case UILevel003KeyType.Right:
+                List<ButtonDirection> list = this._mainKey.needClickButtonList;
                 list.RemoveAt(0);
-                keys = UILevel003InitKey.ListToKeys(list);
-                break;
-            default:
-                break;
+                return new UILevel003Key(toType, list);
         }
-        UILevel003InitKey initKey = UILevel003InitKey.GetUILevel003InitKey(toType, keys);
-        return initKey;
+        return null;
     }
     #endregion
 
@@ -336,19 +330,23 @@ public class UILevel003Key
             return str;
         }
     }
-    public static UILevel003Key GetUILevel003Key(UILevel003KeyType type,string keys)
+    public UILevel003Key(UILevel003KeyType type,string keys)
     {
-        UILevel003Key initKey = new UILevel003Key();
-        initKey.keyType = type;
-        initKey.keys = keys;
-        initKey.needClickButtonList = KeysToList(keys);
-        return initKey;
-    } 
+        this.keyType = type;
+        this.keys = keys;
+        this.needClickButtonList = KeysToList(keys);
+    }
+    public UILevel003Key(UILevel003KeyType type,List<ButtonDirection> list)
+    {
+        this.keyType = type;
+        this.needClickButtonList = list;
+        this.keys = ListToKeys(list);
+    }
     /// <summary>
     /// 将剩下所需密码转化为所要点击的按钮类型
     /// </summary>
     /// <returns></returns>
-    public static List<ButtonDirection> KeysToList(string keys)
+    private List<ButtonDirection> KeysToList(string keys)
     {
         List<ButtonDirection> list = new List<ButtonDirection>();
         keys = keys.Trim();
@@ -374,7 +372,7 @@ public class UILevel003Key
         }
         return list;
     }
-    public static string ListToKeys(List<ButtonDirection> list)
+    private string ListToKeys(List<ButtonDirection> list)
     {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.Count; i++)
