@@ -10,28 +10,58 @@ public class UILevel003 : UIBase
     /// 界面主Key
     /// </summary>
     private UILevel003Key _mainKey;
-    
+    /// <summary>
+    /// ↑按钮
+    /// </summary>
     private Button _nextUpButton;
     private const string _nextUpButtonStr = "btnNextUp";
+    /// <summary>
+    /// ↓按钮
+    /// </summary>
     private Button _nextDownButton;
     private const string _nextDownButtonStr = "btnNextDown";
+    /// <summary>
+    /// ←按钮
+    /// </summary>
     private Button _nextLeftButton;
     private const string _nextLeftButtonStr = "btnNextLeft";
+    /// <summary>
+    /// →按钮
+    /// </summary>
     private Button _nextRightButton;
     private const string _nextRightButtonStr = "btnNextRight";
-
+    /// <summary>
+    /// ↑触碰区
+    /// </summary>
     private Button _touchUpButton;
     private const string _touchUpButtonStr = "btnTouchUp";
+    /// <summary>
+    /// ↓触碰区
+    /// </summary>
     private Button _touchDownButton;
     private const string _touchDownButtonStr = "btnTouchDown";
+    /// <summary>
+    /// ←触碰区
+    /// </summary>
     private Button _touchLeftButton;
     private const string _touchLeftButtonStr = "btnTouchLeft";
+    /// <summary>
+    /// →触碰区
+    /// </summary>
     private Button _touchRightButton;
     private const string _touchRightButtonStr = "btnTouchRight";
-
+    /// <summary>
+    /// 下一关按钮数组
+    /// </summary>
     private Button[] _nextButtonArr = new Button[4];
+    /// <summary>
+    /// 提示文本
+    /// </summary>
     private Text _promptText;
     private const string _promptTextStr = "txtPrompt";
+    /// <summary>
+    /// 完整的通关密码
+    /// </summary>
     private static string _allKeys = "2468642";
     public override void RegisterNode(string name, GameObject obj)
     {
@@ -259,6 +289,7 @@ public class UILevel003 : UIBase
                 return new UILevel003Key(toType, keys);
             case UILevel003KeyType.Right:
                 List<ButtonDirection> list = this._mainKey.needClickButtonList;
+                list = list.GetRange(0, list.Count);
                 list.RemoveAt(0);
                 return new UILevel003Key(toType, list);
         }

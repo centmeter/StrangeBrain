@@ -54,9 +54,10 @@
      <Compile Include="Assets\Scripts\UI\Other\DragItem.cs" />
      <Compile Include="Assets\Scripts\UI\UIComponetTool\ImageTool.cs" />
      <Compile Include="Assets\Scripts\UI\UIComponetTool\TextTool.cs" />
-     <Compile Include="Assets\Scripts\UI\UILevel001.cs" />
-     <Compile Include="Assets\Scripts\UI\UILevel002.cs" />
-     <Compile Include="Assets\Scripts\UI\UILevel003.cs" />
+     <Compile Include="Assets\Scripts\UI\UILevel\UILevel001.cs" />
+     <Compile Include="Assets\Scripts\UI\UILevel\UILevel002.cs" />
+     <Compile Include="Assets\Scripts\UI\UILevel\UILevel003.cs" />
+     <Compile Include="Assets\Scripts\UI\UILevel\UILevel004.cs" />
      <None Include="Assets\DOTween\readme.txt" />
      <None Include="Assets\DOTween\DOTween43.xml" />
      <None Include="Assets\DOTween\DOTween50.xml" />
