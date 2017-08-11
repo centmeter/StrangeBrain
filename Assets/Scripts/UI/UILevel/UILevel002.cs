@@ -287,7 +287,8 @@ public class UILevel002 : UIBase
     private void OnNextButtonClick()
     {
         _nextButton.interactable = false;
-        UIManager.Instance.UIEnter<UILevel003>(UIEnterStyle.FromTopToBottom);
+        UILevel003Key key = new UILevel003Key(UILevel003KeyType.BeforeMain, string.Empty);
+        UIManager.Instance.UIEnter<UILevel003>(UIEnterStyle.FromTopToBottom, true, true, key);
         UIManager.Instance.UIExit(this, UIExitStyle.ToBottom);
     }
     private void OnLineButtonClick()
