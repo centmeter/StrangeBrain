@@ -59,30 +59,26 @@ public class UILevel001 : UIBase
                 break;
             case TOUCH_BUTTON:
                 _touchButton = obj.GetComponent<Button>();
-                _touchButton.onClick.AddListener(OnTouchButtonClick);
                 break;
             case PROMPT_TEXT:
                 _promptText = obj.GetComponent<Text>();
                 break;
             case CONFIRM_BUTTON:
                 _confirmButton = obj.GetComponent<Button>();
-                _confirmButton.onClick.AddListener(OnConfirmButtonClick);
                 break;
             case NAME_INPUT:
                 _nameInput = obj.GetComponent<InputField>();
                 break;
             case NEXT_BUTTON:
                 _nextButton = obj.GetComponent<Button>();
-                _nextButton.onClick.AddListener(OnNextButtonClick);
                 break;
             default:
                 break;
         }
     }
-    public override void Init()
+    public override void Init(bool hasKeys, params object[] keys)
     {
-        base.Init();
-
+        InitOnButtonClick();
         InitPromptData();
         InitButtonData();
         InitInputData();
@@ -191,6 +187,15 @@ public class UILevel001 : UIBase
     #endregion
 
     #region 点击事件相关
+    /// <summary>
+    /// 监听点击事件
+    /// </summary>
+    private void InitOnButtonClick()
+    {
+        _touchButton.onClick.AddListener(OnTouchButtonClick);
+        _confirmButton.onClick.AddListener(OnConfirmButtonClick);
+        _nextButton.onClick.AddListener(OnNextButtonClick);
+    }
     private void OnTouchButtonClick()
     {
         _touchButton.gameObject.SetActive(false);
@@ -208,7 +213,7 @@ public class UILevel001 : UIBase
     private void OnNextButtonClick()
     {
         _nextButton.interactable = false;
-        UIManager.Instance.UIEnter<UILevel002>(false, UIEnterStyle.FromLeftToRight);
+        UIManager.Instance.UIEnter<UILevel002>(UIEnterStyle.FromLeftToRight);
         UIManager.Instance.UIExit(this, UIExitStyle.ToRight);
     }
     #endregion

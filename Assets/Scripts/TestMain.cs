@@ -5,6 +5,7 @@ public class TestMain : MonoBehaviour
 {
     private void Start()
     {
-        UIManager.Instance.UIEnter<UILevel002>(false,UIEnterStyle.FromLeftToRight);
+        UILevel003InitKey key = UILevel003InitKey.GetUILevel003InitKey(UILevel003InitKey.InitKeyType.BeforeMain, "");
+        UIManager.Instance.UIEnter<UILevel003>(UIEnterStyle.FromTopToBottom,true,true,key);
     }
 }

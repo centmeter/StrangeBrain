@@ -21,7 +21,7 @@ public class UIManager : Singleton<UIManager>
     {
         _uiList = new List<UIBase>();
     }
-    public T UIEnter<T>(bool isCache, UIEnterStyle style,float time=1) where T : UIBase
+    public T UIEnter<T>(UIEnterStyle style, bool isCache=false, bool hasKeys=false, params object[] keys) where T : UIBase
     {
         GameObject obj = ResourceManager.Instance.CreateGameObject(UI_PATH_ROOT + typeof(T).ToString(), isCache);
         if (obj == null)
@@ -35,14 +35,14 @@ public class UIManager : Singleton<UIManager>
         rect.offsetMax = Vector2.zero;
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
-        OnUIEnterStyle(rect, style, time);
+        OnUIEnterStyle(rect, style);
         T t = obj.AddComponent<T>();
         t.InitNode(t.transform);
-        t.Init();
+        t.Init(hasKeys, keys);
         _uiList.Add(t);
         return t;
     }
-    public void UIExit(UIBase ui,UIExitStyle style,float time=1)
+    public void UIExit(UIBase ui,UIExitStyle style)
     {
         if (ui == null)
         {
@@ -55,13 +55,13 @@ public class UIManager : Singleton<UIManager>
             return;
         }
         _uiList.Remove(ui);
-        OnUIExitStyle(ui.GetComponent<RectTransform>(), style, time,()=> { Destroy(ui.gameObject); });
+        OnUIExitStyle(ui.GetComponent<RectTransform>(), style,()=> { Destroy(ui.gameObject); });
         
     }
     /// <summary>
     /// 加载UI的方式
     /// </summary>
-    private void OnUIEnterStyle(RectTransform rect, UIEnterStyle style,float time,TweenCallback onComplete=null)
+    private void OnUIEnterStyle(RectTransform rect, UIEnterStyle style, TweenCallback onComplete = null,float time=1)
     {
         Vector2 endPos = rect.anchoredPosition;
         Vector2 startPos = Vector2.zero;
@@ -97,7 +97,7 @@ public class UIManager : Singleton<UIManager>
     /// 移除UI的方式
     /// </summary>
     /// <param name="style"></param>
-    private void OnUIExitStyle(RectTransform rect, UIExitStyle style,float time, TweenCallback onComplete =null)
+    private void OnUIExitStyle(RectTransform rect, UIExitStyle style, TweenCallback onComplete = null, float time=1)
     {
         Vector2 startPos = rect.anchoredPosition;
         Vector2 endPos = Vector2.zero;

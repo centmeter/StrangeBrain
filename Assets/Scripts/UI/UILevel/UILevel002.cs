@@ -62,19 +62,16 @@ public class UILevel002 : UIBase
                 break;
             case NEXT_BUTTON:
                 _nextButton = obj.GetComponent<Button>();
-                _nextButton.onClick.AddListener(OnNextButtonClick);
                 break;
             case LINE_BUTTON:
                 _lineButton = obj.GetComponent<Button>();
-                _lineButton.onClick.AddListener(OnLineButtonClick);
                 break;
             default:
                 break;
         }
     }
-    public override void Init()
+    public override void Init(bool hasKeys,params object[] keys)
     {
-        base.Init();
         _lineButtonRect = _lineButton.GetComponent<RectTransform>();
         _contentTextRect = _contentText.GetComponent<RectTransform>();
         _lineButtonImage = _lineButton.GetComponent<Image>();
@@ -82,6 +79,7 @@ public class UILevel002 : UIBase
         DragItem.AddDragItem(_lineButton.gameObject, OnLinesDragBegin, OnLineButtonDrag, OnLineButtonDragEnd).enabled = false ;
         DragItem.AddDragItem(_titleText.gameObject, null, null, OnTitleTextDragEnd).enabled = false;
 
+        InitOnButtonClick();
         InitNextButtonData();
         InitLinesData();
        
@@ -278,9 +276,18 @@ public class UILevel002 : UIBase
     #endregion
 
     #region 点击事件
+    /// <summary>
+    /// 监听点击事件
+    /// </summary>
+    private void InitOnButtonClick()
+    {
+        _nextButton.onClick.AddListener(OnNextButtonClick);
+        _lineButton.onClick.AddListener(OnLineButtonClick);
+    }
     private void OnNextButtonClick()
     {
-        UIManager.Instance.UIEnter<UILevel003>(false, UIEnterStyle.FromTopToBottom);
+        _nextButton.interactable = false;
+        UIManager.Instance.UIEnter<UILevel003>(UIEnterStyle.FromTopToBottom);
         UIManager.Instance.UIExit(this, UIExitStyle.ToBottom);
     }
     private void OnLineButtonClick()
